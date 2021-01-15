@@ -72,7 +72,6 @@ function filterUnimplemented(pm) {
 
 async function handleSubmission(state, dropin, url) {
   try {
-    console.log(url)
     const response = await callServer(
       url,
       {
@@ -83,7 +82,6 @@ async function handleSubmission(state, dropin, url) {
     );
     
     if (response.action) {
-      console.log(JSON.stringify(response.action));
       dropin.handleAction(response.action);
     } else window.location.href = `/result?paymentStatus=${response.resultCode}`;
   } catch (err) {
