@@ -1,0 +1,22 @@
+{
+  "fr-FR": {
+    "locale": "fr-FR",
+    "countryCode": "FR",
+    "currency": "EUR"
+  },
+  "nl-NL": {
+    "locale": "nl-NL",
+    "countryCode": "NL",
+    "currency": "EUR"
+  },
+  "zh-CN": {
+    "locale": "zh-CN",
+    "countryCode": "CN",
+    "currency": "CNY"
+  },
+  "en-AU": {
+    "locale": "en-AU",
+    "countryCode": "AU",
+    "currency": "AUD"
+  }
+}

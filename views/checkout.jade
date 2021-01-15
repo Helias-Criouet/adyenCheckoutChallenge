@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1 Checkout
+  h2 #{item.name}
+  h3 Price: #{item.price} #{currency}
+
+  div(id='client-key', style='display:none') #{clientKey}
+  div#dropin-container
+  script(src='javascripts/setupDropin.js')

@@ -1,0 +1,8 @@
+extends layout
+
+block content
+  h1 Shop
+  ul#items
+    each item in items
+      h2
+        a(href='/checkout?itemId=' + item.id) Buy #{item.name} (#{item.price} #{currency})
