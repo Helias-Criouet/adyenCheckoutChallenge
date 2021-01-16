@@ -22,7 +22,7 @@ router.post('/', async function (req, res) {
           value: item.price * 100,
         },
         channel: 'Web',
-        shopperLocale: req.body.locale,
+        shopperLocale: locale.locale,
         shopperReference: 'theOneSingleShopperOfMyWebsite',
       },
     })).body;

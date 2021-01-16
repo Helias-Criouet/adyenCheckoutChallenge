@@ -12,6 +12,8 @@ router.post('/', async function (req, res) {
   const item = getItem(req.body.itemId);
   const { stateData } = req.body;
   const reference = paymentDatabase.generatePaymentReference();
+  const useToken = stateData.paymentMethod.type === 'scheme' &&
+    !stateData.storePaymentMethod;
 
   try {
     const paymentsResponse = (await client({
@@ -23,17 +25,14 @@ router.post('/', async function (req, res) {
           currency: locale.currency,
           value: item.price * 100,
         },
-        additionalData: {
-          allow3DS2: true,
-          executeThreeD: true,
-        },
+        additionalData: { allow3DS2: true,
+          executeThreeD: true, },
         countryCode: locale.countryCode,
         shopperLocale: locale.locale,
         shopperReference: 'theOneSingleShopperOfMyWebsite',
         storePaymentMethod: stateData.storePaymentMethod,
-        shopperInteraction: stateData.storePaymentMethod ? '' : 'ContAuth',
-        recurringProcessingModel:
-          stateData.storePaymentMethod ? '' : 'CardOnFile',
+        // shopperInteraction: useToken ? 'ContAuth' : '',
+        recurringProcessingModel: useToken ? 'CardOnFile' : '',
         shopperIP: req.ip,
         shopperEmail: 's.hopper@example.com',
         origin: process.env.ORIGIN,

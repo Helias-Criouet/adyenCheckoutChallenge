@@ -63,21 +63,21 @@ async function setupDropin() {
  */
 function filterUnimplemented(pm) {
   pm.paymentMethods = pm.paymentMethods.filter((it) => [
-      'scheme',
-      'ideal',
-      'wechatpayWeb'
-      // "poli",
-      // "dotpay",
-      // "giropay",
-      // "sepadirectdebit",
-      // "directEbanking",
-      // "ach",
-      // "alipay",
-      // "klarna_paynow",
-      // "klarna",
-      // "klarna_account",
-      // "boletobancario_santander",
-    ].includes(it.type));
+    'scheme',
+    'ideal',
+    'wechatpayWeb'
+    // "poli",
+    // "dotpay",
+    // "giropay",
+    // "sepadirectdebit",
+    // "directEbanking",
+    // "ach",
+    // "alipay",
+    // "klarna_paynow",
+    // "klarna",
+    // "klarna_account",
+    // "boletobancario_santander",
+  ].includes(it.type));
 
 return pm;
 }
