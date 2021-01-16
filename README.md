@@ -6,7 +6,7 @@ An ugly website able to perform credit card and iDEAL payments on the Adyen test
 
 ### Dependencies
 
-* Node.js
+* Node.js v14.15.4 LTS
 * npm
 
 ### Installing
@@ -15,13 +15,13 @@ You will need to create a `.env` file in the root folder and provide your Adyen 
 
 Then, run the following command to finish the setup:
 
-```
+```bash
 npm install
 ```
 
 ### Executing program
 
-```
+```bash
 npm start
 ```
 
