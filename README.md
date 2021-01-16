@@ -1,6 +1,6 @@
 # Adyen Checkout Challenge
 
-An ugly website able to perform credit card and iDEAL payments on the Adyen test environment.
+A website able to perform credit card and iDEAL payments on the Adyen test environment thanks to the [Web Drop-in integration](https://docs.adyen.com/online-payments/drop-in-web).
 
 ## Getting Started
 
