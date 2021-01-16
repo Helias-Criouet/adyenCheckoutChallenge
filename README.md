@@ -6,7 +6,7 @@ An ugly website able to perform credit card and iDEAL payments on the Adyen test
 
 ### Dependencies
 
-* Node.js v14.15.4 LTS
+* Node.js LTS version
 * npm
 
 ### Installing
