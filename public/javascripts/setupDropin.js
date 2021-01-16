@@ -1,20 +1,25 @@
-// A few good ideas (e.g. the 'filterUnimplemented' method)
-// come from https://github.com/adyen-examples/adyen-node-online-payments/blob/0090e23b86e2f2ebbb9ac7b7fc90895599f1e889/public/adyenImplementation.js
+/*
+ * A few good ideas (e.g. the 'filterUnimplemented' method) come from
+ * https://github.com/adyen-examples/adyen-node-online-payments
+ */
 
-const dropinContainer = document.getElementById('dropin-container').innerHTML;
 const clientKey = document.getElementById('client-key').innerHTML;
 const urlParams = new URLSearchParams(window.location.search);
 const itemId = urlParams.get('itemId');
 const locale = urlParams.get('locale');
 
+/**
+ * Setup the Adyen drop-in component
+ * @returns {undefined} N/A
+ */
 async function setupDropin() {
   try {
     const paymentMethodsResponse = await callServer(
       'api/paymentMethods',
       {
         itemId,
-        locale,
-      },
+        locale
+      }
     );
 
     const dropinConfig = {
@@ -25,8 +30,8 @@ async function setupDropin() {
           holderNameRequired: true,
           enableStoreDetails: true,
           name: 'Credit or debit card',
-          billingAddressRequired: true,
-        },
+          billingAddressRequired: true
+        }
       },
       clientKey,
       locale: 'en_US',
@@ -38,22 +43,29 @@ async function setupDropin() {
       },
       onAdditionalDetails: (state, dropin) => {
         handleSubmission(state, dropin, '/api/payments/details');
-      },
+      }
     };
 
+    // eslint-disable-next-line no-undef
     const checkout = new AdyenCheckout(dropinConfig);
+
     checkout.create('dropin').mount('#dropin-container');
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error(err);
   }
 }
 
+/**
+ * Filter out the unimplemented payment methods
+ * @param {object} pm The unfiltered response from the payment methods call
+ * @returns {object} The filtered payment methods object
+ */
 function filterUnimplemented(pm) {
-  pm.paymentMethods = pm.paymentMethods.filter((it) =>
-    [
-      "scheme",
-      "ideal",
-      "wechatpayWeb",
+  pm.paymentMethods = pm.paymentMethods.filter((it) => [
+      'scheme',
+      'ideal',
+      'wechatpayWeb'
       // "poli",
       // "dotpay",
       // "giropay",
@@ -65,11 +77,18 @@ function filterUnimplemented(pm) {
       // "klarna",
       // "klarna_account",
       // "boletobancario_santander",
-    ].includes(it.type)
-  );
-  return pm;
+    ].includes(it.type));
+
+return pm;
 }
 
+/**
+ * Perform necessary actions when the shopper submits the form successfully
+ * @param {object} state The state of the drop-in
+ * @param {object} dropin The drop-in
+ * @param {string} url The API URL to call
+ * @returns {undefined} N/A
+ */
 async function handleSubmission(state, dropin, url) {
   try {
     const response = await callServer(
@@ -77,28 +96,36 @@ async function handleSubmission(state, dropin, url) {
       {
         itemId,
         locale,
-        stateData: state.data,
+        stateData: state.data
       }
     );
-    
+
     if (response.action) {
       dropin.handleAction(response.action);
-    } else window.location.href = `/result?paymentStatus=${response.resultCode}`;
+    } else
+      window.location.href = `/result?paymentStatus=${response.resultCode}`;
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.error(err);
   }
 }
 
+/**
+ * Call the server with the relevant data on the relevant route
+ * @param {string} url The API URL to call
+ * @param {object} data The data to send
+ * @returns {object} The response from the server
+ */
 async function callServer(url, data) {
   const response = await fetch(url, {
     method: 'POST',
     body: data ? JSON.stringify(data) : '',
     headers: {
-      'Content-Type': 'application/json',
-    },
+      'Content-Type': 'application/json'
+    }
   });
 
-  return await response.json();
+  return response.json();
 }
 
 setupDropin();

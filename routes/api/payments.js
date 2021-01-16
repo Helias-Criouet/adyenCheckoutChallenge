@@ -7,10 +7,10 @@ const getItem = require('../../lib/getItem');
 const paymentDatabase = require('../../lib/paymentDatabase');
 
 /* POST api/payments */
-router.post('/', async function (req, res, next) {
+router.post('/', async function (req, res) {
   const locale = getLocale(req.body.locale);
   const item = getItem(req.body.itemId);
-  const stateData = req.body.stateData;
+  const { stateData } = req.body;
   const reference = paymentDatabase.generatePaymentReference();
 
   try {
@@ -19,9 +19,9 @@ router.post('/', async function (req, res, next) {
       url: 'payments',
       json: {
         reference,
-        amount:{
+        amount: {
           currency: locale.currency,
-          value: item.price*100,
+          value: item.price * 100,
         },
         additionalData: {
           allow3DS2: true,
@@ -32,7 +32,8 @@ router.post('/', async function (req, res, next) {
         shopperReference: 'theOneSingleShopperOfMyWebsite',
         storePaymentMethod: stateData.storePaymentMethod,
         shopperInteraction: stateData.storePaymentMethod ? '' : 'ContAuth',
-        recurringProcessingModel: stateData.storePaymentMethod ? '' : 'CardOnFile',
+        recurringProcessingModel:
+          stateData.storePaymentMethod ? '' : 'CardOnFile',
         shopperIP: req.ip,
         shopperEmail: 's.hopper@example.com',
         origin: process.env.ORIGIN,
@@ -40,18 +41,17 @@ router.post('/', async function (req, res, next) {
         browserInfo: stateData.browserInfo,
         billingAddress: stateData.billingAddress,
         paymentMethod: stateData.paymentMethod,
-        returnUrl: `${process.env.ORIGIN}/returnUrl?paymentReference=${reference}`,
+        returnUrl:
+          `${process.env.ORIGIN}/returnUrl?paymentReference=${reference}`,
         merchantAccount: process.env.ADYEN_MERCHANT_ACCOUNT,
       },
     })).body;
 
-    if (paymentsResponse.resultCode == 'Error') console.log(paymentsResponse.refusalReason);
-
-    // Add payment info to database for e.g. further payment actions or reconciliation tasks
+    // Add payment info to database
+    // for e.g. further payment actions or reconciliation tasks
     paymentDatabase.addPayment(reference, paymentsResponse);
     res.send(paymentsResponse);
-  } catch(err) {
-    console.error(err);
+  } catch (err) {
     res.status(err.statusCode || 500);
     err.resultCode = 'Error';
     res.send(err);

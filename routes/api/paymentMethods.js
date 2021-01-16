@@ -6,7 +6,7 @@ const getLocale = require('../../lib/getLocale');
 const getItem = require('../../lib/getItem');
 
 /* POST api/paymentMethods */
-router.post('/', async function (req, res, next) {
+router.post('/', async function (req, res) {
   const locale = getLocale(req.body.locale);
   const item = getItem(req.body.itemId);
 
@@ -17,9 +17,9 @@ router.post('/', async function (req, res, next) {
       json: {
         merchantAccount: process.env.ADYEN_MERCHANT_ACCOUNT,
         countryCode: locale.countryCode,
-        amount:{
+        amount: {
           currency: locale.currency,
-          value: item.price*100,
+          value: item.price * 100,
         },
         channel: 'Web',
         shopperLocale: req.body.locale,
@@ -28,8 +28,7 @@ router.post('/', async function (req, res, next) {
     })).body;
 
     res.send(paymentMethodsResponse);
-  } catch(err) {
-    console.error(err);
+  } catch (err) {
     res.status(err.statusCode || 500);
     res.send(err);
   }

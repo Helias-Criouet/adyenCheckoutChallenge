@@ -4,7 +4,7 @@ const router = express.Router();
 const client = require('../../lib/adyenClient');
 
 /* POST api/payments/details */
-router.post('/', async function (req, res, next) {
+router.post('/', async function (req, res) {
   try {
     const paymentsDetailsResponse = (await client({
       method: 'POST',
@@ -12,11 +12,8 @@ router.post('/', async function (req, res, next) {
       json: req.body.stateData,
     })).body;
 
-    if (paymentsDetailsResponse.resultCode == 'Error') console.log(paymentsDetailsResponse.refusalReason);
-    
     res.send(paymentsDetailsResponse);
-  } catch(err) {
-    console.error(err);
+  } catch (err) {
     res.status(err.statusCode || 500);
     err.resultCode = 'Error';
     res.send(err);
